@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_margin="16dp"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    app:cardPreventCornerOverlap="true"
+    app:cardElevation="10dp"
+    app:cardCornerRadius="4dp"
+    app:strokeColor="@color/secondaryLightColor"
+    app:strokeWidth="4dp">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/matter_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="Title"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:background="@color/primaryColor"
+        android:textColor="@color/cardview_light_background"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+
+    <TextView
+        android:id="@+id/matter_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primaryLightColor"
+        tools:text="Lorem ipsum blah blah dolorum dingum dooben"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+        />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
