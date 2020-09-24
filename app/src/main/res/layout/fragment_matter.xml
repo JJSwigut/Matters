@@ -8,8 +8,8 @@
     app:cardPreventCornerOverlap="true"
     app:cardElevation="10dp"
     app:cardCornerRadius="4dp"
-    app:strokeColor="@color/secondaryLightColor"
-    app:strokeWidth="4dp">
+    app:strokeColor="@color/primaryDarkColor"
+    app:strokeWidth="2dp">
 
 
     <LinearLayout
@@ -17,26 +17,24 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/matter_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:text="Title"
-        android:paddingStart="4dp"
-        android:paddingEnd="4dp"
-        android:background="@color/primaryColor"
-        android:textColor="@color/cardview_light_background"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+        <TextView
+            android:id="@+id/matter_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/primaryColor"
+            android:padding="8dp"
+            tools:text="Title"
+            android:textColor="@color/cardview_light_background"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
 
-    <TextView
-        android:id="@+id/matter_content"
-        android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/matter_content"
+            android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/primaryLightColor"
-        tools:text="Lorem ipsum blah blah dolorum dingum dooben"
-        android:paddingStart="4dp"
-        android:paddingEnd="4dp"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+            tools:text="Lorem ipsum blah blah dolorum dingum dooben"
+            android:padding="8dp"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
         />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

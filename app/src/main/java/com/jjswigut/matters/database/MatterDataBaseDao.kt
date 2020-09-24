@@ -2,10 +2,10 @@
 
 package com.jjswigut.matters.database
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 
 @Dao
 interface MatterDataBaseDao{
@@ -13,7 +13,7 @@ interface MatterDataBaseDao{
     @Insert
     suspend fun insert(matter: Matter)
 
-    @Insert
+    @Update
     suspend fun update(matter: Matter)
 
     @Query("SELECT * from matter_table WHERE matterId = :key")
@@ -22,8 +22,6 @@ interface MatterDataBaseDao{
     @Query("DELETE FROM matter_table")
     suspend fun clear()
 
-    @Query("SELECT * FROM matter_table ORDER BY matterId DESC LIMIT 1 ")
-    suspend fun getMatter(): Matter?
 
 
 

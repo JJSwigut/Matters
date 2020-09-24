@@ -1,5 +1,3 @@
-
-
 package com.jjswigut.matters.database
 
 import android.content.Context
