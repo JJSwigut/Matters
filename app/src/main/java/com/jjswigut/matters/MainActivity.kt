@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
         loadFragment(MatterListFragment())
     }
 
-    private fun loadFragment(fragment: Fragment?): Boolean {
+    private fun loadFragment(fragment: Fragment): Boolean {
 
         if (fragment != null) {
             supportFragmentManager

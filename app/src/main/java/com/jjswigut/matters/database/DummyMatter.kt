@@ -1,5 +1,5 @@
 package com.jjswigut.matters.database
 
 data class DummyMatter(
-    var matterTitle: String, var matterContent: String
+    val matterTitle: String, val matterContent: String
 )

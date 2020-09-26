@@ -14,14 +14,15 @@ import com.jjswigut.matters.databinding.FragmentMatterListBinding
  */
 class MatterListFragment : Fragment() {
 
-    private lateinit var binding: FragmentMatterListBinding
+    private var _binding: FragmentMatterListBinding? = null
+    private val binding get() = _binding!!
     private lateinit var listAdapter: MatterListRecyclerViewAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentMatterListBinding.inflate(inflater, container, false)
+        _binding = FragmentMatterListBinding.inflate(inflater, container, false)
         val view = binding.root
         initRecyclerView()
         addDataSet()
@@ -40,5 +41,10 @@ class MatterListFragment : Fragment() {
             listAdapter = MatterListRecyclerViewAdapter()
             adapter = listAdapter
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

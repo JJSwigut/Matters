@@ -4,9 +4,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.jjswigut.matters.R
 import com.jjswigut.matters.database.DummyMatter
+import com.jjswigut.matters.util.ListDiffCallback
 
 
 class MatterListRecyclerViewAdapter :
@@ -28,8 +30,12 @@ class MatterListRecyclerViewAdapter :
 
     override fun getItemCount(): Int = values.size
 
+
     fun submitList(dummyList: List<DummyMatter>) {
+        val diffCallback = ListDiffCallback(values, dummyList)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
         values = dummyList
+        diffResult.dispatchUpdatesTo(this)
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -44,7 +50,8 @@ class DataSource {
             val list = ArrayList<DummyMatter>()
             list.add(
                 DummyMatter(
-                    "Note 1", "Wikis are enabled " +
+                    "Note 1",
+                    "Wikis are enabled " +
                             "by wiki software, otherwise known as wiki engines. " +
                             "A wiki engine, being a form of a content management system, " +
                             "differs from other web-based systems such as blog software,"
@@ -52,7 +59,8 @@ class DataSource {
             )
             list.add(
                 DummyMatter(
-                    "Note 2", "Wikis are enabled " +
+                    "Note 2",
+                    "Wikis are enabled " +
                             "by wiki software, otherwise known as wiki engines. " +
                             "A wiki engine, being a form of a content management system, " +
                             "differs from other web-based systems such as blog software,"
@@ -60,7 +68,8 @@ class DataSource {
             )
             list.add(
                 DummyMatter(
-                    "Note 3", "Wikis are enabled " +
+                    "Note 3",
+                    "Wikis are enabled " +
                             "by wiki software, otherwise known as wiki engines. " +
                             "A wiki engine, being a form of a content management system, " +
                             "differs from other web-based systems such as blog software,"
@@ -68,7 +77,8 @@ class DataSource {
             )
             list.add(
                 DummyMatter(
-                    "Note 4", "Wikis are enabled " +
+                    "Note 4",
+                    "Wikis are enabled " +
                             "by wiki software, otherwise known as wiki engines. " +
                             "A wiki engine, being a form of a content management system, " +
                             "differs from other web-based systems such as blog software,"
@@ -76,7 +86,8 @@ class DataSource {
             )
             list.add(
                 DummyMatter(
-                    "Note 5", "Wikis are enabled " +
+                    "Note 5",
+                    "Wikis are enabled " +
                             "by wiki software, otherwise known as wiki engines. " +
                             "A wiki engine, being a form of a content management system, " +
                             "differs from other web-based systems such as blog software,"
@@ -84,7 +95,8 @@ class DataSource {
             )
             list.add(
                 DummyMatter(
-                    "Note 6", "Wikis are enabled " +
+                    "Note 6",
+                    "Wikis are enabled " +
                             "by wiki software, otherwise known as wiki engines. " +
                             "A wiki engine, being a form of a content management system, " +
                             "differs from other web-based systems such as blog software,"
@@ -92,7 +104,8 @@ class DataSource {
             )
             list.add(
                 DummyMatter(
-                    "Note 7", "Wikis are enabled " +
+                    "Note 7",
+                    "Wikis are enabled " +
                             "by wiki software, otherwise known as wiki engines. " +
                             "A wiki engine, being a form of a content management system, " +
                             "differs from other web-based systems such as blog software,"
@@ -100,7 +113,8 @@ class DataSource {
             )
             list.add(
                 DummyMatter(
-                    "Note 8", "Wikis are enabled " +
+                    "Note 8",
+                    "Wikis are enabled " +
                             "by wiki software, otherwise known as wiki engines. " +
                             "A wiki engine, being a form of a content management system, " +
                             "differs from other web-based systems such as blog software,"
