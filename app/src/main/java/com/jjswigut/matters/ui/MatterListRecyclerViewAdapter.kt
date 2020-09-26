@@ -1,21 +1,20 @@
 package com.jjswigut.matters.ui
 
-import android.graphics.ImageFormat
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import com.jjswigut.matters.R
-import com.jjswigut.matters.database.Matter
+import com.jjswigut.matters.database.DummyMatter
+import com.jjswigut.matters.util.ListDiffCallback
 
 
+class MatterListRecyclerViewAdapter :
+    RecyclerView.Adapter<MatterListRecyclerViewAdapter.ViewHolder>() {
 
-class MatterListRecyclerViewAdapter(
-    //this started as a dummy list and kept it in to compile
-    val values: List<Matter>
-
-) : RecyclerView.Adapter<MatterListRecyclerViewAdapter.ViewHolder>() {
+    private var values: List<DummyMatter> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -31,12 +30,97 @@ class MatterListRecyclerViewAdapter(
 
     override fun getItemCount(): Int = values.size
 
+
+    fun submitList(dummyList: List<DummyMatter>) {
+        val diffCallback = ListDiffCallback(values, dummyList)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+        values = dummyList
+        diffResult.dispatchUpdatesTo(this)
+    }
+
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val titleView: TextView = view.findViewById(R.id.matter_title)
-        val contentView: TextView = view.findViewById(R.id.content)
+        val contentView: TextView = view.findViewById(R.id.matter_content)
+    }
+}
 
-        override fun toString(): String {
-            return super.toString() + " '" + contentView.text + "'"
+class DataSource {
+    companion object {
+        fun createDataSet(): ArrayList<DummyMatter> {
+            val list = ArrayList<DummyMatter>()
+            list.add(
+                DummyMatter(
+                    "Note 1",
+                    "Wikis are enabled " +
+                            "by wiki software, otherwise known as wiki engines. " +
+                            "A wiki engine, being a form of a content management system, " +
+                            "differs from other web-based systems such as blog software,"
+                )
+            )
+            list.add(
+                DummyMatter(
+                    "Note 2",
+                    "Wikis are enabled " +
+                            "by wiki software, otherwise known as wiki engines. " +
+                            "A wiki engine, being a form of a content management system, " +
+                            "differs from other web-based systems such as blog software,"
+                )
+            )
+            list.add(
+                DummyMatter(
+                    "Note 3",
+                    "Wikis are enabled " +
+                            "by wiki software, otherwise known as wiki engines. " +
+                            "A wiki engine, being a form of a content management system, " +
+                            "differs from other web-based systems such as blog software,"
+                )
+            )
+            list.add(
+                DummyMatter(
+                    "Note 4",
+                    "Wikis are enabled " +
+                            "by wiki software, otherwise known as wiki engines. " +
+                            "A wiki engine, being a form of a content management system, " +
+                            "differs from other web-based systems such as blog software,"
+                )
+            )
+            list.add(
+                DummyMatter(
+                    "Note 5",
+                    "Wikis are enabled " +
+                            "by wiki software, otherwise known as wiki engines. " +
+                            "A wiki engine, being a form of a content management system, " +
+                            "differs from other web-based systems such as blog software,"
+                )
+            )
+            list.add(
+                DummyMatter(
+                    "Note 6",
+                    "Wikis are enabled " +
+                            "by wiki software, otherwise known as wiki engines. " +
+                            "A wiki engine, being a form of a content management system, " +
+                            "differs from other web-based systems such as blog software,"
+                )
+            )
+            list.add(
+                DummyMatter(
+                    "Note 7",
+                    "Wikis are enabled " +
+                            "by wiki software, otherwise known as wiki engines. " +
+                            "A wiki engine, being a form of a content management system, " +
+                            "differs from other web-based systems such as blog software,"
+                )
+            )
+            list.add(
+                DummyMatter(
+                    "Note 8",
+                    "Wikis are enabled " +
+                            "by wiki software, otherwise known as wiki engines. " +
+                            "A wiki engine, being a form of a content management system, " +
+                            "differs from other web-based systems such as blog software,"
+                )
+            )
+            return list
         }
     }
 }
