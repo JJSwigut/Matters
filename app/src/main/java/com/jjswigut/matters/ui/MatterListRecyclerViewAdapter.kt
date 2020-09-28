@@ -7,14 +7,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.jjswigut.matters.R
-import com.jjswigut.matters.database.DummyMatter
+import com.jjswigut.matters.database.Matter
 import com.jjswigut.matters.util.ListDiffCallback
 
 
-class MatterListRecyclerViewAdapter :
+class MatterListRecyclerViewAdapter(private var matters: List<Matter>) :
     RecyclerView.Adapter<MatterListRecyclerViewAdapter.ViewHolder>() {
 
-    private var values: List<DummyMatter> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -23,104 +22,32 @@ class MatterListRecyclerViewAdapter :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = values[position]
+        val item = matters[position]
         holder.titleView.text = item.matterTitle
         holder.contentView.text = item.matterContent
+
+//        holder.itemView.setOnClickListener {
+//            val action = MatterListFragmentDirections.actionMatterListFragmentToEditMatterFragment()
+//            action.matter = matters[position]
+//            Navigation.findNavController(it).navigate(action)
+//        }
     }
 
-    override fun getItemCount(): Int = values.size
+    override fun getItemCount(): Int = matters.size
 
 
-    fun submitList(dummyList: List<DummyMatter>) {
-        val diffCallback = ListDiffCallback(values, dummyList)
+    fun submitList(matterList: List<Matter>) {
+        val diffCallback = ListDiffCallback(matters, matterList)
         val diffResult = DiffUtil.calculateDiff(diffCallback)
-        values = dummyList
+        matters = matterList
         diffResult.dispatchUpdatesTo(this)
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val titleView: TextView = view.findViewById(R.id.matter_title)
         val contentView: TextView = view.findViewById(R.id.matter_content)
-    }
-}
 
-class DataSource {
-    companion object {
-        fun createDataSet(): ArrayList<DummyMatter> {
-            val list = ArrayList<DummyMatter>()
-            list.add(
-                DummyMatter(
-                    "Note 1",
-                    "Wikis are enabled " +
-                            "by wiki software, otherwise known as wiki engines. " +
-                            "A wiki engine, being a form of a content management system, " +
-                            "differs from other web-based systems such as blog software,"
-                )
-            )
-            list.add(
-                DummyMatter(
-                    "Note 2",
-                    "Wikis are enabled " +
-                            "by wiki software, otherwise known as wiki engines. " +
-                            "A wiki engine, being a form of a content management system, " +
-                            "differs from other web-based systems such as blog software,"
-                )
-            )
-            list.add(
-                DummyMatter(
-                    "Note 3",
-                    "Wikis are enabled " +
-                            "by wiki software, otherwise known as wiki engines. " +
-                            "A wiki engine, being a form of a content management system, " +
-                            "differs from other web-based systems such as blog software,"
-                )
-            )
-            list.add(
-                DummyMatter(
-                    "Note 4",
-                    "Wikis are enabled " +
-                            "by wiki software, otherwise known as wiki engines. " +
-                            "A wiki engine, being a form of a content management system, " +
-                            "differs from other web-based systems such as blog software,"
-                )
-            )
-            list.add(
-                DummyMatter(
-                    "Note 5",
-                    "Wikis are enabled " +
-                            "by wiki software, otherwise known as wiki engines. " +
-                            "A wiki engine, being a form of a content management system, " +
-                            "differs from other web-based systems such as blog software,"
-                )
-            )
-            list.add(
-                DummyMatter(
-                    "Note 6",
-                    "Wikis are enabled " +
-                            "by wiki software, otherwise known as wiki engines. " +
-                            "A wiki engine, being a form of a content management system, " +
-                            "differs from other web-based systems such as blog software,"
-                )
-            )
-            list.add(
-                DummyMatter(
-                    "Note 7",
-                    "Wikis are enabled " +
-                            "by wiki software, otherwise known as wiki engines. " +
-                            "A wiki engine, being a form of a content management system, " +
-                            "differs from other web-based systems such as blog software,"
-                )
-            )
-            list.add(
-                DummyMatter(
-                    "Note 8",
-                    "Wikis are enabled " +
-                            "by wiki software, otherwise known as wiki engines. " +
-                            "A wiki engine, being a form of a content management system, " +
-                            "differs from other web-based systems such as blog software,"
-                )
-            )
-            return list
-        }
+
     }
+
 }

@@ -24,9 +24,9 @@
             android:layout_height="wrap_content"
             android:background="@color/primaryColor"
             android:padding="8dp"
-            tools:text="Title"
-            android:textColor="@color/cardview_light_background"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+            android:textColor="@color/primaryTextColor"
+            tools:text="Title" />
 
         <TextView
             android:id="@+id/matter_content"

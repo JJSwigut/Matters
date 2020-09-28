@@ -4,19 +4,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.navigation.Navigation
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.jjswigut.matters.database.MatterDatabase
 import com.jjswigut.matters.databinding.FragmentMatterListBinding
+import kotlinx.coroutines.launch
 
 
 /**
  * A fragment representing a list of Items.
  */
-class MatterListFragment : Fragment() {
+class MatterListFragment : BaseFragment() {
 
     private var _binding: FragmentMatterListBinding? = null
     private val binding get() = _binding!!
-    private lateinit var listAdapter: MatterListRecyclerViewAdapter
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -24,22 +26,31 @@ class MatterListFragment : Fragment() {
     ): View? {
         _binding = FragmentMatterListBinding.inflate(inflater, container, false)
         val view = binding.root
-        initRecyclerView()
-        addDataSet()
+
+        binding.newFab.setOnClickListener {
+            val action = MatterListFragmentDirections.actionMatterListFragmentToEditMatterFragment()
+            Navigation.findNavController(it).navigate(action)
+        }
 
         return view
     }
 
-    private fun addDataSet() {
-        val data = DataSource.createDataSet()
-        listAdapter.submitList(data)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initRecyclerView()
     }
+
 
     private fun initRecyclerView() {
         binding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(context)
-            listAdapter = MatterListRecyclerViewAdapter()
-            adapter = listAdapter
+            layoutManager = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL)
+            setHasFixedSize(true)
+            launch {
+                context?.let {
+                    val matters = MatterDatabase.getInstance(it).matterDataBaseDao.getAllMatters()
+                    adapter = MatterListRecyclerViewAdapter(matters)
+                }
+            }
         }
     }
 
