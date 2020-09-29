@@ -19,6 +19,20 @@ class MatterListFragment : BaseFragment() {
     private var _binding: FragmentMatterListBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var listAdapter: MatterListRecyclerViewAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        listAdapter = MatterListRecyclerViewAdapter(::handleAction)
+
+        launch {
+            context?.let {
+                val matters = MatterDatabase.getInstance(it).matterDataBaseDao.getAllMatters()
+                listAdapter.updateData(matters)
+            }
+        }
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,7 +42,8 @@ class MatterListFragment : BaseFragment() {
         val view = binding.root
 
         binding.newFab.setOnClickListener {
-            val action = MatterListFragmentDirections.actionMatterListFragmentToEditMatterFragment()
+            val action =
+                MatterListFragmentDirections.actionMatterListFragmentToEditMatterFragment()
             Navigation.findNavController(it).navigate(action)
         }
 
@@ -45,11 +60,14 @@ class MatterListFragment : BaseFragment() {
         binding.recyclerView.apply {
             layoutManager = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL)
             setHasFixedSize(true)
-            launch {
-                context?.let {
-                    val matters = MatterDatabase.getInstance(it).matterDataBaseDao.getAllMatters()
-                    adapter = MatterListRecyclerViewAdapter(matters)
-                }
+            adapter = listAdapter
+        }
+    }
+
+    private fun handleAction(action: MatterAction) {
+        when (action) {
+            is MatterAction.MatterClicked -> {
+
             }
         }
     }
@@ -58,4 +76,5 @@ class MatterListFragment : BaseFragment() {
         super.onDestroyView()
         _binding = null
     }
+
 }

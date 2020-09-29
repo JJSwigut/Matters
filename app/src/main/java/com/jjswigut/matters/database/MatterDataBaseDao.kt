@@ -7,7 +7,7 @@ import androidx.room.*
 @Dao
 interface MatterDataBaseDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert
     suspend fun insert(matter: Matter)
 
     @Update(onConflict = OnConflictStrategy.REPLACE)

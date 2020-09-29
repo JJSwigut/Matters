@@ -50,7 +50,7 @@
                     android:layout_height="wrap_content"
                     android:background="@color/primaryColor"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@color/primaryTextColor" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 

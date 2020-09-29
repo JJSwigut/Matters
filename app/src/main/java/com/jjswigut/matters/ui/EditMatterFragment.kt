@@ -15,6 +15,8 @@ class EditMatterFragment : BaseFragment() {
     private var _binding: FragmentEditMatterBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var matter: Matter
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,36 +30,55 @@ class EditMatterFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.saveFab.setOnClickListener { view ->
 
-            val title = binding.titleInput.text.toString().trim()
-            val content = binding.contentInput.text.toString().trim()
+        binding.saveFab.setOnClickListener {
+            input()
+            validateInput()
+            saveMatter()
+            navigate()
+        }
 
-            if (title.isEmpty()) {
-                binding.titleInput.error = "Give it a name!"
-                binding.titleInput.requestFocus()
-                return@setOnClickListener
-            }
+    }
 
-            if (content.isEmpty()) {
-                binding.contentInput.error = "You forgot the whole point of this app!"
-                binding.contentInput.requestFocus()
-                return@setOnClickListener
-            }
+    private fun input(): Matter {
+        val title = binding.titleInput.text.toString().trim()
+        val content = binding.contentInput.text.toString().trim()
+        matter = Matter(title, content)
+        return matter
+    }
 
-            launch {
-                val matter = Matter(title, content)
-                context?.let {
-                    MatterDatabase.getInstance(it).matterDataBaseDao.insert(matter)
-                    it.toast("Your Matter now matters")
-                }
-            }
-            Navigation.findNavController(view).navigate(
-                EditMatterFragmentDirections.actionEditMatterFragmentToMatterListFragment()
-            )
+    private fun validateInput() {
+
+        if (input().matterTitle.isEmpty()) {
+            binding.titleInput.error = "Give it a name!"
+            binding.titleInput.requestFocus()
 
         }
 
+        if (input().matterContent.isEmpty()) {
+            binding.contentInput.error = "You forgot the whole point of this app!"
+            binding.contentInput.requestFocus()
+
+        }
+
+    }
+
+    private fun saveMatter() {
+        launch {
+            val matter = Matter(input().matterTitle, input().matterContent)
+            context?.let {
+                MatterDatabase.getInstance(it).matterDataBaseDao.insert(matter)
+                it.toast("Your Matter now matters")
+            }
+        }
+    }
+
+    private fun navigate() {
+        view?.let {
+            Navigation.findNavController(it).navigate(
+                EditMatterFragmentDirections.actionEditMatterFragmentToMatterListFragment()
+            )
+        }
     }
 
     override fun onDestroyView() {

@@ -11,9 +11,8 @@
         <action
             android:id="@+id/action_matterListFragment_to_editMatterFragment"
             app:destination="@id/editMatterFragment"
-            app:exitAnim="@anim/fragment_fade_exit">
-            />
-        </action>
+            app:exitAnim="@anim/fragment_fade_exit" />
+
 
     </fragment>
     <fragment
@@ -25,11 +24,6 @@
         <action
             android:id="@+id/action_editMatterFragment_to_matterListFragment"
             app:destination="@id/matterListFragment" />
-        <!--        <argument-->
-        <!--            app:argType="com.jjswigut.matters.database.Matter"-->
-        <!--            android:name="Matter"-->
-        <!--            app:nullable="true"-->
-        <!--            android:defaultValue="@null" />-->
 
     </fragment>
 </navigation>

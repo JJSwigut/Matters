@@ -11,9 +11,10 @@ import com.jjswigut.matters.database.Matter
 import com.jjswigut.matters.util.ListDiffCallback
 
 
-class MatterListRecyclerViewAdapter(private var matters: List<Matter>) :
+class MatterListRecyclerViewAdapter(private val actionHandler: MatterActionHandler) :
     RecyclerView.Adapter<MatterListRecyclerViewAdapter.ViewHolder>() {
 
+    private var elements = listOf<Matter>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -22,24 +23,24 @@ class MatterListRecyclerViewAdapter(private var matters: List<Matter>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = matters[position]
+        val item = elements[position]
         holder.titleView.text = item.matterTitle
         holder.contentView.text = item.matterContent
 
-//        holder.itemView.setOnClickListener {
-//            val action = MatterListFragmentDirections.actionMatterListFragmentToEditMatterFragment()
-//            action.matter = matters[position]
-//            Navigation.findNavController(it).navigate(action)
-//        }
+        holder.itemView.setOnClickListener {
+            actionHandler(MatterAction.MatterClicked(position, item))
+        }
     }
 
-    override fun getItemCount(): Int = matters.size
+    override fun getItemCount(): Int = elements.size
 
 
-    fun submitList(matterList: List<Matter>) {
-        val diffCallback = ListDiffCallback(matters, matterList)
-        val diffResult = DiffUtil.calculateDiff(diffCallback)
-        matters = matterList
+    fun updateData(newData: List<Matter>) {
+
+        val diffResult = DiffUtil.calculateDiff(
+            ListDiffCallback
+                (newList = newData, oldList = elements)
+        )
         diffResult.dispatchUpdatesTo(this)
     }
 
@@ -51,3 +52,5 @@ class MatterListRecyclerViewAdapter(private var matters: List<Matter>) :
     }
 
 }
+
+typealias MatterActionHandler = (MatterAction) -> Unit
