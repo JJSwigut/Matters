@@ -7,7 +7,7 @@
     <fragment
         android:id="@+id/matterListFragment"
         android:name="com.jjswigut.matters.ui.MatterListFragment"
-        android:label="MatterListFragment">
+        android:label="Matters">
         <action
             android:id="@+id/action_matterListFragment_to_editMatterFragment"
             app:destination="@id/editMatterFragment"
@@ -18,12 +18,20 @@
     <fragment
         android:id="@+id/editMatterFragment"
         android:name="com.jjswigut.matters.ui.EditMatterFragment"
-        android:label="fragment_edit_matter"
+        android:label="Matters"
         app:startDestination="@id/action_editMatterFragment_to_matterListFragment"
         tools:layout="@layout/fragment_edit_matter">
         <action
             android:id="@+id/action_editMatterFragment_to_matterListFragment"
             app:destination="@id/matterListFragment" />
+        <argument
+            android:name="title"
+            android:defaultValue=" "
+            app:argType="string" />
+        <argument
+            android:name="content"
+            android:defaultValue=" "
+            app:argType="string" />
 
     </fragment>
 </navigation>

@@ -25,6 +25,11 @@ class MatterListFragment : BaseFragment() {
         super.onCreate(savedInstanceState)
         listAdapter = MatterListRecyclerViewAdapter(::handleAction)
 
+
+    }
+
+    override fun onResume() {
+        super.onResume()
         launch {
             context?.let {
                 val matters = MatterDatabase.getInstance(it).matterDataBaseDao.getAllMatters()
@@ -67,7 +72,17 @@ class MatterListFragment : BaseFragment() {
     private fun handleAction(action: MatterAction) {
         when (action) {
             is MatterAction.MatterClicked -> {
+                val title = action.matter.matterTitle
+                val content = action.matter.matterContent
 
+                view?.let {
+                    Navigation.findNavController(it).navigate(
+                        MatterListFragmentDirections.actionMatterListFragmentToEditMatterFragment(
+                            title,
+                            content
+                        )
+                    )
+                }
             }
         }
     }

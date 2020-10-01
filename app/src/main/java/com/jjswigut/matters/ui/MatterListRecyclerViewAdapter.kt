@@ -1,35 +1,35 @@
 package com.jjswigut.matters.ui
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.jjswigut.matters.R
 import com.jjswigut.matters.database.Matter
+import com.jjswigut.matters.databinding.FragmentMatterBinding
 import com.jjswigut.matters.util.ListDiffCallback
 
 
 class MatterListRecyclerViewAdapter(private val actionHandler: MatterActionHandler) :
     RecyclerView.Adapter<MatterListRecyclerViewAdapter.ViewHolder>() {
 
-    private var elements = listOf<Matter>()
+    private val elements: ArrayList<Matter> = arrayListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.fragment_matter, parent, false)
-        return ViewHolder(view)
+        return ViewHolder(
+            binding = FragmentMatterBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            ),
+            actionHandler = actionHandler,
+            elements = elements
+        )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = elements[position]
-        holder.titleView.text = item.matterTitle
-        holder.contentView.text = item.matterContent
-
-        holder.itemView.setOnClickListener {
-            actionHandler(MatterAction.MatterClicked(position, item))
-        }
+        val item = (elements[position])
+        holder.bind(item)
     }
 
     override fun getItemCount(): Int = elements.size
@@ -41,14 +41,32 @@ class MatterListRecyclerViewAdapter(private val actionHandler: MatterActionHandl
             ListDiffCallback
                 (newList = newData, oldList = elements)
         )
+        elements.clear()
+        elements.addAll(newData)
         diffResult.dispatchUpdatesTo(this)
     }
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val titleView: TextView = view.findViewById(R.id.matter_title)
-        val contentView: TextView = view.findViewById(R.id.matter_content)
+
+    inner class ViewHolder(
+        private val binding: FragmentMatterBinding,
+        private val actionHandler: MatterActionHandler,
+        private val elements: List<Matter>
+    ) : RecyclerView.ViewHolder(binding.root) {
+
+        private val titleView: TextView = binding.matterTitle
+        private val contentView: TextView = binding.matterContent
+        private fun element() = elements[adapterPosition]
+
+        fun bind(item: Matter) {
+            //use element() here to set up your view and do any onclicks that ya want
+            titleView.text = element().matterTitle
+            contentView.text = element().matterContent
+            binding.matterView.setOnClickListener {
+                actionHandler(MatterAction.MatterClicked(position, item))
+            }
 
 
+        }
     }
 
 }
