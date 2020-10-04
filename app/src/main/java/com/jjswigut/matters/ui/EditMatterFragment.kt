@@ -15,7 +15,7 @@ class EditMatterFragment : BaseFragment() {
     private var _binding: FragmentEditMatterBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var matter: Matter
+    private var matter: Matter? = null
 
     val args: EditMatterFragmentArgs by navArgs()
 
@@ -32,25 +32,33 @@ class EditMatterFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.contentInput.setText(args.content)
-        binding.titleInput.setText(args.title)
 
+        arguments?.let {
+            matter = EditMatterFragmentArgs.fromBundle(it).matter
+            binding.titleInput.setText(matter?.matterTitle)
+            binding.contentInput.setText(matter?.matterContent)
+        }
 
         binding.saveFab.setOnClickListener {
             input()
-            validateInput()
-            if (validateInput()) {
-                if (args.title.isNotEmpty()) {
-                    updateMatter()
 
-                } else {
-                    saveMatter()
+            launch {
+
+                context?.let {
+                    val mMatter = Matter(input().matterTitle, input().matterContent)
+
+                    if (matter == null) {
+                        MatterDatabase.getInstance(it).matterDataBaseDao.insert(mMatter)
+                        it.toast("Your Matter now matters")
+                    } else {
+                        mMatter.matterId = matter!!.matterId
+                        MatterDatabase.getInstance(it).matterDataBaseDao.update(mMatter)
+                        it.toast("Your Matter is updated")
+                    }
                 }
-                navigate()
             }
-
+            navigate()
         }
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -58,11 +66,23 @@ class EditMatterFragment : BaseFragment() {
         inflater.inflate(R.menu.menu, menu)
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menu_delete -> {
+                deleteMatter()
+                navigate()
+                return true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    // Fix the input part
     private fun input(): Matter {
         var title = binding.titleInput.text.toString().trim()
         var content = binding.contentInput.text.toString().trim()
         matter = Matter(title, content)
-        return matter
+        return matter as Matter
     }
 
     private fun validateInput(): Boolean {
@@ -80,23 +100,37 @@ class EditMatterFragment : BaseFragment() {
         } else return true
     }
 
-    private fun saveMatter() {
-        launch {
-            val matter = Matter(input().matterTitle, input().matterContent)
-            context?.let {
-                MatterDatabase.getInstance(it).matterDataBaseDao.insert(matter)
-                it.toast("Your Matter now matters")
-            }
-        }
-    }
+//    private fun saveMatter() {
+//        launch {
+//             matter = Matter(
+//                input().matterId,
+//                input().matterTitle,
+//                input().matterContent
+//            )
+//            context?.let {
+//                MatterDatabase.getInstance(it).matterDataBaseDao.insert(matter!!)
+//                it.toast("Your Matter now matters")
+//            }
+//        }
+//    }
 
-    private fun updateMatter() {
+    //    private fun updateMatter() {
+//        launch {
+//            val matter = Matter(input().matterTitle, input().matterContent)
+//            context?.let {
+//                MatterDatabase.getInstance(it).matterDataBaseDao.update(matter)
+//                it.toast("Your Matter now matters")
+//            }
+//        }
+//    }
+    private fun deleteMatter() {
         launch {
             val matter = Matter(input().matterTitle, input().matterContent)
             context?.let {
-                MatterDatabase.getInstance(it).matterDataBaseDao.update(matter)
-                it.toast("Your Matter now matters")
+                MatterDatabase.getInstance(it).matterDataBaseDao.delete(matter)
+                it.toast("Your Matter no longer matters")
             }
+
         }
     }
 
@@ -112,5 +146,5 @@ class EditMatterFragment : BaseFragment() {
         super.onDestroyView()
         _binding = null
     }
-
 }
+

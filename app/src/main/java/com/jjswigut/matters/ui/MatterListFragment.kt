@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.jjswigut.matters.database.Matter
 import com.jjswigut.matters.database.MatterDatabase
 import com.jjswigut.matters.databinding.FragmentMatterListBinding
 import kotlinx.coroutines.launch
@@ -18,6 +19,8 @@ class MatterListFragment : BaseFragment() {
 
     private var _binding: FragmentMatterListBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var matter: Matter
 
     private lateinit var listAdapter: MatterListRecyclerViewAdapter
 
@@ -74,12 +77,13 @@ class MatterListFragment : BaseFragment() {
             is MatterAction.MatterClicked -> {
                 val title = action.matter.matterTitle
                 val content = action.matter.matterContent
+                matter = Matter(content, title)
+
 
                 view?.let {
                     Navigation.findNavController(it).navigate(
                         MatterListFragmentDirections.actionMatterListFragmentToEditMatterFragment(
-                            title,
-                            content
+                            matter
                         )
                     )
                 }

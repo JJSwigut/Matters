@@ -25,13 +25,10 @@
             android:id="@+id/action_editMatterFragment_to_matterListFragment"
             app:destination="@id/matterListFragment" />
         <argument
-            android:name="title"
-            android:defaultValue=" "
-            app:argType="string" />
-        <argument
-            android:name="content"
-            android:defaultValue=" "
-            app:argType="string" />
+            android:name="Matter"
+            android:defaultValue="@null"
+            app:argType="com.jjswigut.matters.database.Matter"
+            app:nullable="true" />
 
     </fragment>
 </navigation>
