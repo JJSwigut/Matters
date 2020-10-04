@@ -7,9 +7,8 @@ import java.io.Serializable
 
 @Entity(tableName = "matter_table")
 data class Matter(
-
     @ColumnInfo(name = "matter_title")
-    val matterTitle: String,
+    var matterTitle: String,
     @ColumnInfo(name = "matter_content")
     var matterContent: String,
 ) : Serializable {
