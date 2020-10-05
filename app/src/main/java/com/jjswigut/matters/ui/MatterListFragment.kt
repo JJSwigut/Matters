@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.jjswigut.matters.database.Matter
+import com.jjswigut.matters.R
 import com.jjswigut.matters.database.MatterDatabase
 import com.jjswigut.matters.databinding.FragmentMatterListBinding
 import kotlinx.coroutines.launch
@@ -20,15 +20,11 @@ class MatterListFragment : BaseFragment() {
     private var _binding: FragmentMatterListBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var matter: Matter
-
     private lateinit var listAdapter: MatterListRecyclerViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         listAdapter = MatterListRecyclerViewAdapter(::handleAction)
-
-
     }
 
     override fun onResume() {
@@ -40,7 +36,6 @@ class MatterListFragment : BaseFragment() {
             }
         }
     }
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,7 +49,6 @@ class MatterListFragment : BaseFragment() {
                 MatterListFragmentDirections.actionMatterListFragmentToEditMatterFragment()
             Navigation.findNavController(it).navigate(action)
         }
-
         return view
     }
 
@@ -62,7 +56,6 @@ class MatterListFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
     }
-
 
     private fun initRecyclerView() {
         binding.recyclerView.apply {
@@ -75,16 +68,11 @@ class MatterListFragment : BaseFragment() {
     private fun handleAction(action: MatterAction) {
         when (action) {
             is MatterAction.MatterClicked -> {
-                val title = action.matter.matterTitle
-                val content = action.matter.matterContent
-                matter = Matter(content, title)
-
 
                 view?.let {
                     Navigation.findNavController(it).navigate(
-                        MatterListFragmentDirections.actionMatterListFragmentToEditMatterFragment(
-                            matter
-                        )
+                        R.id.action_matterListFragment_to_editMatterFragment,
+                        EditMatterFragment.newBundle(action.matter)
                     )
                 }
             }

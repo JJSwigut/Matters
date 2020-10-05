@@ -3,7 +3,6 @@ package com.jjswigut.matters.ui
 import android.os.Bundle
 import android.view.*
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.navArgs
 import com.jjswigut.matters.R
 import com.jjswigut.matters.database.Matter
 import com.jjswigut.matters.database.MatterDatabase
@@ -16,8 +15,6 @@ class EditMatterFragment : BaseFragment() {
     private val binding get() = _binding!!
 
     private var matter: Matter? = null
-
-    val args: EditMatterFragmentArgs by navArgs()
 
 
     override fun onCreateView(
@@ -34,26 +31,38 @@ class EditMatterFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         arguments?.let {
-            matter = EditMatterFragmentArgs.fromBundle(it).matter
+            if (it.containsKey(ARG_MATTER)) {
+                matter = it.getSerializable(ARG_MATTER) as Matter
+            }
             binding.titleInput.setText(matter?.matterTitle)
             binding.contentInput.setText(matter?.matterContent)
         }
 
         binding.saveFab.setOnClickListener {
-            input()
+
 
             launch {
+                if (validateInput()) {
 
-                context?.let {
-                    val mMatter = Matter(input().matterTitle, input().matterContent)
+                    context?.let {
+                        val title = binding.titleInput.text.toString().trim()
+                        val content = binding.contentInput.text.toString().trim()
 
-                    if (matter == null) {
-                        MatterDatabase.getInstance(it).matterDataBaseDao.insert(mMatter)
-                        it.toast("Your Matter now matters")
-                    } else {
-                        mMatter.matterId = matter!!.matterId
-                        MatterDatabase.getInstance(it).matterDataBaseDao.update(mMatter)
-                        it.toast("Your Matter is updated")
+                        if (matter == null) {
+                            val mMatter = Matter(title, content)
+                            MatterDatabase.getInstance(it).matterDataBaseDao.insert(mMatter)
+                            it.toast("Your Matter now matters")
+                        } else {
+                            matter?.let { unwrappedMatter ->
+                                unwrappedMatter.matterContent = content
+                                unwrappedMatter.matterTitle = title
+
+                                MatterDatabase.getInstance(it).matterDataBaseDao.update(
+                                    unwrappedMatter
+                                )
+                                it.toast("Your Matter is updated")
+                            }
+                        }
                     }
                 }
             }
@@ -77,61 +86,34 @@ class EditMatterFragment : BaseFragment() {
         }
     }
 
-    // Fix the input part
-    private fun input(): Matter {
-        var title = binding.titleInput.text.toString().trim()
-        var content = binding.contentInput.text.toString().trim()
-        matter = Matter(title, content)
-        return matter as Matter
-    }
-
     private fun validateInput(): Boolean {
 
-        if (input().matterTitle.isEmpty()) {
+        val title = binding.titleInput.text.toString().trim()
+        val content = binding.contentInput.text.toString().trim()
+
+        if (title.isEmpty()) {
             binding.titleInput.error = "Give it a name!"
             binding.titleInput.requestFocus()
             return false
         }
 
-        if (input().matterContent.isEmpty()) {
+        if (content.isEmpty()) {
             binding.contentInput.error = "You forgot the whole point of this app!"
             binding.contentInput.requestFocus()
             return false
         } else return true
     }
 
-//    private fun saveMatter() {
-//        launch {
-//             matter = Matter(
-//                input().matterId,
-//                input().matterTitle,
-//                input().matterContent
-//            )
-//            context?.let {
-//                MatterDatabase.getInstance(it).matterDataBaseDao.insert(matter!!)
-//                it.toast("Your Matter now matters")
-//            }
-//        }
-//    }
-
-    //    private fun updateMatter() {
-//        launch {
-//            val matter = Matter(input().matterTitle, input().matterContent)
-//            context?.let {
-//                MatterDatabase.getInstance(it).matterDataBaseDao.update(matter)
-//                it.toast("Your Matter now matters")
-//            }
-//        }
-//    }
     private fun deleteMatter() {
-        launch {
-            val matter = Matter(input().matterTitle, input().matterContent)
-            context?.let {
-                MatterDatabase.getInstance(it).matterDataBaseDao.delete(matter)
-                it.toast("Your Matter no longer matters")
-            }
+        if (matter != null) {
+            launch {
 
-        }
+                context?.let {
+                    MatterDatabase.getInstance(it).matterDataBaseDao.delete(matter!!)
+                    it.toast("Your Matter no longer matters")
+                }
+            }
+        } else context?.toast("There's no Matter to Delete!")
     }
 
     private fun navigate() {
@@ -145,6 +127,14 @@ class EditMatterFragment : BaseFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private const val ARG_MATTER = "arg_matter"
+
+        fun newBundle(matter: Matter) = Bundle().apply {
+            putSerializable(ARG_MATTER, matter)
+        }
     }
 }
 
