@@ -2,28 +2,25 @@
 
 package com.jjswigut.matters.database
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 
 @Dao
-interface MatterDataBaseDao{
+interface MatterDataBaseDao {
 
     @Insert
     suspend fun insert(matter: Matter)
 
-    @Update
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun update(matter: Matter)
 
-    @Query("SELECT * from matter_table WHERE matterId = :key")
-    suspend fun get(key: Long): Matter?
+    @Delete
+    suspend fun delete(matter: Matter)
+
+    @Query("SELECT * FROM matter_table ORDER BY matterId DESC")
+    suspend fun getAllMatters(): List<Matter>
 
     @Query("DELETE FROM matter_table")
     suspend fun clear()
-
-
-
 
 
 }

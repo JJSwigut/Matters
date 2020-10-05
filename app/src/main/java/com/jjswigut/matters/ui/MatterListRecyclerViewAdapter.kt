@@ -1,126 +1,74 @@
 package com.jjswigut.matters.ui
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.jjswigut.matters.R
-import com.jjswigut.matters.database.DummyMatter
+import com.jjswigut.matters.database.Matter
+import com.jjswigut.matters.databinding.FragmentMatterBinding
 import com.jjswigut.matters.util.ListDiffCallback
 
 
-class MatterListRecyclerViewAdapter :
+class MatterListRecyclerViewAdapter(private val actionHandler: MatterActionHandler) :
     RecyclerView.Adapter<MatterListRecyclerViewAdapter.ViewHolder>() {
 
-    private var values: List<DummyMatter> = ArrayList()
+    private val elements: ArrayList<Matter> = arrayListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.fragment_matter, parent, false)
-        return ViewHolder(view)
+        return ViewHolder(
+            binding = FragmentMatterBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            ),
+            actionHandler = actionHandler,
+            elements = elements
+        )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = values[position]
-        holder.titleView.text = item.matterTitle
-        holder.contentView.text = item.matterContent
+        val item = (elements[position])
+        holder.bind(item)
     }
 
-    override fun getItemCount(): Int = values.size
+    override fun getItemCount(): Int = elements.size
 
 
-    fun submitList(dummyList: List<DummyMatter>) {
-        val diffCallback = ListDiffCallback(values, dummyList)
-        val diffResult = DiffUtil.calculateDiff(diffCallback)
-        values = dummyList
+    fun updateData(newData: List<Matter>) {
+
+        val diffResult = DiffUtil.calculateDiff(
+            ListDiffCallback
+                (newList = newData, oldList = elements)
+        )
+        elements.clear()
+        elements.addAll(newData)
         diffResult.dispatchUpdatesTo(this)
     }
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val titleView: TextView = view.findViewById(R.id.matter_title)
-        val contentView: TextView = view.findViewById(R.id.matter_content)
-    }
-}
 
-class DataSource {
-    companion object {
-        fun createDataSet(): ArrayList<DummyMatter> {
-            val list = ArrayList<DummyMatter>()
-            list.add(
-                DummyMatter(
-                    "Note 1",
-                    "Wikis are enabled " +
-                            "by wiki software, otherwise known as wiki engines. " +
-                            "A wiki engine, being a form of a content management system, " +
-                            "differs from other web-based systems such as blog software,"
-                )
-            )
-            list.add(
-                DummyMatter(
-                    "Note 2",
-                    "Wikis are enabled " +
-                            "by wiki software, otherwise known as wiki engines. " +
-                            "A wiki engine, being a form of a content management system, " +
-                            "differs from other web-based systems such as blog software,"
-                )
-            )
-            list.add(
-                DummyMatter(
-                    "Note 3",
-                    "Wikis are enabled " +
-                            "by wiki software, otherwise known as wiki engines. " +
-                            "A wiki engine, being a form of a content management system, " +
-                            "differs from other web-based systems such as blog software,"
-                )
-            )
-            list.add(
-                DummyMatter(
-                    "Note 4",
-                    "Wikis are enabled " +
-                            "by wiki software, otherwise known as wiki engines. " +
-                            "A wiki engine, being a form of a content management system, " +
-                            "differs from other web-based systems such as blog software,"
-                )
-            )
-            list.add(
-                DummyMatter(
-                    "Note 5",
-                    "Wikis are enabled " +
-                            "by wiki software, otherwise known as wiki engines. " +
-                            "A wiki engine, being a form of a content management system, " +
-                            "differs from other web-based systems such as blog software,"
-                )
-            )
-            list.add(
-                DummyMatter(
-                    "Note 6",
-                    "Wikis are enabled " +
-                            "by wiki software, otherwise known as wiki engines. " +
-                            "A wiki engine, being a form of a content management system, " +
-                            "differs from other web-based systems such as blog software,"
-                )
-            )
-            list.add(
-                DummyMatter(
-                    "Note 7",
-                    "Wikis are enabled " +
-                            "by wiki software, otherwise known as wiki engines. " +
-                            "A wiki engine, being a form of a content management system, " +
-                            "differs from other web-based systems such as blog software,"
-                )
-            )
-            list.add(
-                DummyMatter(
-                    "Note 8",
-                    "Wikis are enabled " +
-                            "by wiki software, otherwise known as wiki engines. " +
-                            "A wiki engine, being a form of a content management system, " +
-                            "differs from other web-based systems such as blog software,"
-                )
-            )
-            return list
+    inner class ViewHolder(
+        private val binding: FragmentMatterBinding,
+        private val actionHandler: MatterActionHandler,
+        private val elements: List<Matter>
+    ) : RecyclerView.ViewHolder(binding.root) {
+
+        private val titleView: TextView = binding.matterTitle
+        private val contentView: TextView = binding.matterContent
+        private fun element() = elements[adapterPosition]
+
+        fun bind(item: Matter) {
+            //use element() here to set up your view and do any onclicks that ya want
+            titleView.text = element().matterTitle
+            contentView.text = element().matterContent
+            binding.matterView.setOnClickListener {
+                actionHandler(MatterAction.MatterClicked(position, item))
+            }
+
+
         }
     }
+
 }
+
+typealias MatterActionHandler = (MatterAction) -> Unit
