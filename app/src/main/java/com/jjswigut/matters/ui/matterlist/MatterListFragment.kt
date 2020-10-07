@@ -1,20 +1,26 @@
-package com.jjswigut.matters.ui
+package com.jjswigut.matters.ui.matterlist
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.jjswigut.matters.R
-import com.jjswigut.matters.database.MatterDatabase
 import com.jjswigut.matters.databinding.FragmentMatterListBinding
-import kotlinx.coroutines.launch
+import com.jjswigut.matters.ui.BaseFragment
+import com.jjswigut.matters.ui.MatterAction
+import com.jjswigut.matters.ui.matter.EditMatterFragment
+import dagger.hilt.android.AndroidEntryPoint
 
 
 /**
  * A fragment representing a list of Items.
  */
+
+@AndroidEntryPoint
 class MatterListFragment : BaseFragment() {
 
     private var _binding: FragmentMatterListBinding? = null
@@ -22,20 +28,23 @@ class MatterListFragment : BaseFragment() {
 
     private lateinit var listAdapter: MatterListRecyclerViewAdapter
 
+    private val viewModel: MatterListFragmentViewModel by viewModels()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         listAdapter = MatterListRecyclerViewAdapter(::handleAction)
+
     }
 
     override fun onResume() {
         super.onResume()
-        launch {
-            context?.let {
-                val matters = MatterDatabase.getInstance(it).matterDataBaseDao.getAllMatters()
-                listAdapter.updateData(matters)
-            }
-        }
+        viewModel.allMatters.observe(this, Observer { list ->
+            list?.let { listAdapter.updateData(it) }
+        })
+
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
