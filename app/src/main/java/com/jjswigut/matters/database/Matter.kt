@@ -12,10 +12,8 @@ data class Matter(
     var matterTitle: String,
     @ColumnInfo(name = "matter_content")
     var matterContent: String,
-) : Serializable {
     @PrimaryKey(autoGenerate = true)
     var matterId: Int = 0
-
-}
+) : Serializable
 
 
