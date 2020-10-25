@@ -13,7 +13,7 @@ data class Matter(
     @ColumnInfo(name = "matter_content")
     var matterContent: String,
     @PrimaryKey(autoGenerate = true)
-    var matterId: Int = 0
+    var matterId: Int = 1
 ) : Serializable
 
 

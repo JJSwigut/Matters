@@ -11,9 +11,6 @@ import com.jjswigut.matters.getOrAwaitValue
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
-import org.hamcrest.CoreMatchers.`is`
-import org.hamcrest.CoreMatchers.notNullValue
-import org.hamcrest.MatcherAssert.assertThat
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -47,29 +44,36 @@ class MatterDataBaseDaoTest {
 
     @Test
     fun insertMatterObserveLiveData() = runBlockingTest {
-        // GIVEN - insert a task
-        val matter = Matter("title", "description")
+
+        val matter = Matter("title", "content")
         database.matterDataBaseDao.insert(matter)
 
-        // WHEN - Get the task by id from the database
+
         val matterList = database.matterDataBaseDao.getAllMatters()
 
-        assertEquals(matterList.getOrAwaitValue(), matter)
+        assertEquals(matterList.getOrAwaitValue().first(), matter)
     }
 
     @Test
     fun updateMatterCheckUpdate() = runBlockingTest {
 
-        val originalMatter = Matter("Title", "Content")
+        val matterList = database.matterDataBaseDao.getAllMatters()
+
+        var originalMatter = Matter("Title", "Content")
         database.matterDataBaseDao.insert(originalMatter)
 
-        val updatedMatter = Matter("new title", "new content", originalMatter.matterId)
-        database.matterDataBaseDao.update(updatedMatter)
+        assertEquals(matterList.getOrAwaitValue()[0].matterTitle, "Title")
 
-        assertThat(updatedMatter, notNullValue())
-        assertThat(updatedMatter.matterId, `is`(originalMatter.matterId))
-        assertThat(updatedMatter.matterTitle, `is`("new title"))
-        assertThat(updatedMatter.matterContent, `is`("new content"))
+        originalMatter.matterContent = "newContent"
+        originalMatter.matterTitle = "newTitle"
+        database.matterDataBaseDao.update(originalMatter)
+
+
+        assertEquals(1, matterList.getOrAwaitValue().size)
+        assertEquals(matterList.getOrAwaitValue()[0].matterId, originalMatter.matterId)
+        assertEquals(matterList.getOrAwaitValue()[0].matterTitle, "newTitle")
+
+
     }
 
 }
