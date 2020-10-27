@@ -1,4 +1,4 @@
-package com.jjswigut.matters.ui
+package com.jjswigut.matters.util
 
 import android.content.Context
 import android.widget.Toast

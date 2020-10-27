@@ -2,6 +2,7 @@
 
 package com.jjswigut.matters.database
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 
 @Dao
@@ -17,7 +18,7 @@ interface MatterDataBaseDao {
     suspend fun delete(matter: Matter)
 
     @Query("SELECT * FROM matter_table ORDER BY matterId DESC")
-    suspend fun getAllMatters(): List<Matter>
+    fun getAllMatters(): LiveData<List<Matter>>
 
     @Query("DELETE FROM matter_table")
     suspend fun clear()

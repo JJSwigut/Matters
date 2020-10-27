@@ -1,20 +1,27 @@
-package com.jjswigut.matters.ui
+package com.jjswigut.matters.ui.matter
 
 import android.os.Bundle
 import android.view.*
+import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import com.jjswigut.matters.R
 import com.jjswigut.matters.database.Matter
 import com.jjswigut.matters.database.MatterDatabase
 import com.jjswigut.matters.databinding.FragmentEditMatterBinding
+import com.jjswigut.matters.ui.BaseFragment
+import com.jjswigut.matters.util.toast
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+
+@AndroidEntryPoint
 class EditMatterFragment : BaseFragment() {
 
     private var _binding: FragmentEditMatterBinding? = null
     private val binding get() = _binding!!
 
     private var matter: Matter? = null
+    private val viewModel: EditMatterFragmentViewModel by viewModels()
 
 
     override fun onCreateView(
@@ -40,33 +47,24 @@ class EditMatterFragment : BaseFragment() {
 
         binding.saveFab.setOnClickListener {
 
+            if (validateInput()) {
+                val title = binding.titleInput.text.toString().trim()
+                val content = binding.contentInput.text.toString().trim()
 
-            launch {
-                if (validateInput()) {
-
-                    context?.let {
-                        val title = binding.titleInput.text.toString().trim()
-                        val content = binding.contentInput.text.toString().trim()
-
-                        if (matter == null) {
-                            val mMatter = Matter(title, content)
-                            MatterDatabase.getInstance(it).matterDataBaseDao.insert(mMatter)
-                            it.toast("Your Matter now matters")
-                        } else {
-                            matter?.let { unwrappedMatter ->
-                                unwrappedMatter.matterContent = content
-                                unwrappedMatter.matterTitle = title
-
-                                MatterDatabase.getInstance(it).matterDataBaseDao.update(
-                                    unwrappedMatter
-                                )
-                                it.toast("Your Matter is updated")
-                            }
-                        }
-                    }
+                if (matter == null) {
+                    val mMatter = Matter(title, content)
+                    viewModel.insert(mMatter)
+                    context?.toast("Your Matter now matters")
+                } else matter?.let { unwrappedMatter ->
+                    unwrappedMatter.matterContent = content
+                    unwrappedMatter.matterTitle = title
+                    viewModel.update(unwrappedMatter)
+                    context?.toast("Your Matter has been updated")
                 }
+                navigate()
             }
-            navigate()
+
+
         }
     }
 

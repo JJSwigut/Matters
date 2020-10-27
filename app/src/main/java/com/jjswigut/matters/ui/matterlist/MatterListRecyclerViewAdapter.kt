@@ -1,4 +1,4 @@
-package com.jjswigut.matters.ui
+package com.jjswigut.matters.ui.matterlist
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.jjswigut.matters.database.Matter
 import com.jjswigut.matters.databinding.FragmentMatterBinding
+import com.jjswigut.matters.ui.MatterAction
 import com.jjswigut.matters.util.ListDiffCallback
 
 
